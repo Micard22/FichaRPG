@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ficha de Personagem D&D</title>
+<style>
+    body {
+        font-family: 'Times New Roman', Times, serif, sans-serif;
+        background-color: rgb(29, 29, 29); /* Altera o fundo para preto */
+        color: rgb(255, 255, 255); /* Altera a cor do texto para branco */
+        margin: 0; /* Remove as margens padrão do corpo */
+        position: relative; /* Define a posição relativa para a página */
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin: 50px auto 0; /* Adiciona margem superior para afastar a ficha do topo */
+        max-width: 600px;
+    }
+
+    h2 {
+        text-align: left;
+        margin: 0; /* Remove as margens padrão */
+        position: absolute; /* Define a posição absoluta */
+        left: 10px; /* Define a distância da borda esquerda */
+        top: 0; /* Define a distância do topo */
+    }
+
+    .info {
+        position: relative;
+        grid-column: 1 / 2; /* Define a posição na grade */
+    }
+
+    .atributos {
+        position: relative;
+        grid-column: 2 / 3; /* Define a posição na grade */
+    }
+
+    .info2 {
+        position: relative;
+        grid-column: 1 / 2; /* Define a posição na grade */
+        grid-row: 2; /* Define a posição na grade */
+        margin-top: -10px; /* Aproxima a barra de vida das informações principais */
+    }
+
+    .vida-barra {
+        background-color: #800000; /* Vermelho escuro */
+        height: 20px; /* Diminui a altura da barra de vida */
+        width: 100%;
+        position: relative;
+        margin-top: -10px; /* Aproxima a barra de vida das informações principais */
+    }
+
+    .vida-progresso {
+        background-color: #cc0000; /* Vermelho mais claro */
+        height: 100%;
+        width: calc(var(--vida-progresso, 100%) - 20px); /* Ajusta a largura para permitir espaço para o número */
+        position: relative;
+        border-radius: 5px;
+    }
+
+    .numero-vida {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white;
+        border: none; /* Remove a borda */
+        background-color: transparent; /* Remove a cor de fundo */
+        width: auto; /* Define a largura automaticamente */
+        font-size: inherit; /* Usa o tamanho de fonte padrão */
+        text-align: center; /* Centraliza o texto */
+    }
+
+    .numero-vida-maxima {
+        color: rgb(0, 0, 0);
+        font-size: 16px; /* Tamanho de fonte maior */
+        text-align: center;
+        position: absolute;
+        top: -30px; /* Posicionamento acima da barra de vida */
+        left: calc(50% + 60px); /* Posicionamento ao lado do nome "Vida" */
+        transform: translateX(-50%);
+        width: 30px; /* Largura menor */
+        border: black;
+    }
+
+    .nome-vida {
+        color: white;
+        font-size: 16px; /* Tamanho de fonte maior */
+        text-align: center;
+        position: absolute;
+        top: -25px; /* Posicionamento acima da barra de vida */
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .btn-vida {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0 5px;
+    }
+
+    .resiliencia-mental, .eventos-traumaticos {
+        position: relative;
+        margin-top: 10px; /* Movendo 10 pixels para baixo */
+        width: 100%;
+        display: flex;
+        align-items: center;
+        bottom: -20px;
+    }
+
+    .bolinha-preenchida {
+        width: 10px;
+        height: 10px;
+        background-color: white;
+        border-radius: 50%;
+        margin-right: 5px;
+        cursor: pointer; /* Altera o cursor para indicar que o elemento é clicável */
+    }
+
+    .bolinha-preenchida.preenchida {
+        background-color: rgb(94, 4, 4); /* Muda a cor para azul quando preenchida */
+    }
+
+    .bolinha-preenchida.preenchida.traumatico {
+        background-color: rgb(0, 119, 255); /* Muda a cor para azul quando preenchida */
+    }
+
+    /* Estilos para a barra de pontos de magia */
+    .pontos-magia-barra {
+        background-color: #8a7500; /* Amarelo */
+        height: 20px; /* Dimensões da barra */
+        width: calc(100% - 20px); /* Largura da barra menos 20px para alinhamento */
+        position: relative;
+        margin-top: 10px; /* 10px de margem superior */
+        margin-bottom: 10px; /* 10px de margem inferior */
+        left: 10px; /* 10px de margem para a esquerda */
+        bottom: -40px;
+    }
+
+    .pontos-magia-progresso {
+        background-color: hsl(59, 100%, 50%); /* Amarelo */
+        height: 100%; /* Altura completa */
+        width: calc(var(--pontos-magia-progresso, 100%) - 20px); /* Largura com margem para o número */
+        position: relative;
+        border-radius: 5px; /* Borda arredondada */
+    }
+
+    .numero-pontos-magia {
+      position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: rgb(0, 0, 0);
+        border: none; /* Remove a borda */
+        background-color: transparent; /* Remove a cor de fundo */
+        width: auto; /* Define a largura automaticamente */
+        font-size: inherit; /* Usa o tamanho de fonte padrão */
+        text-align: center; /* Centraliza o texto */
+    }
+
+    .btn-pontos-magia {
+        background-color: #007bff;
+        color: rgb(255, 255, 255); /* Cor do texto */
+        border: none; /* Sem borda */
+        border-radius: 5px; /* Borda arredondada */
+        padding: 5px 10px; /* Espaçamento interno */
+        margin: 0 5px; /* Margem dos botões */
+    }
+
+    /* Estilos para as perícias */
+    .pericias {
+        position: relative;
+        margin-top: 10px; /* Movendo 10 pixels para baixo */
+        width: 100%;
+        display: grid;
+        grid-template-columns: auto auto;
+        gap: 10px;
+    }
+
+    .pericia {
+        position: relative;
+    }
+
+    .pericia label {
+        color: white;
+        font-size: 16px;
+    }
+
+    .pericia input {
+        color: black;
+        font-size: 16px;
+        padding: 5px;
+        border: 1px solid white;
+        border-radius: 5px;
+        width: 50px;
+    }
+
+    /* Estilos para os botões de rolar dados */
+    .botoes-dados {
+        margin-top: 10px;
+        grid-column: 1 / -1; /* Ocupa todas as colunas */
+        display: flex;
+        justify-content: center;
+    }
+
+    .botao-dado {
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin: 0 5px;
+        cursor: pointer;
+    }
+
+    /* Estilos para a caixa de resultado do dado */
+    .resultado-dado {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: 9999;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Ficha de Personagem</h2>
+    <!-- Estrutura HTML existente omitida por brevidade -->
+
+    <!-- Adicionando um novo elemento para mostrar o resultado do dado -->
+    <div id="resultado-dado" class="resultado-dado"></div>
+</div>
+
+<script>
+    // Função para exibir o resultado do dado
+    function exibirResultadoDado(result) {
+        var resultadoDado = document.getElementById('resultado-dado');
+        resultadoDado.textContent = 'Resultado do dado: ' + result;
+        resultadoDado.style.display = 'block';
+    }
+
+    // Função para ocultar o resultado do dado
+    function ocultarResultadoDado() {
+        var resultadoDado = document.getElementById('resultado-dado');
+        resultadoDado.style.display = 'none';
+    }
+
+    // Event listener para os botões de rolar dados
+    document.getElementById('d20').addEventListener('click', function() {
+        var result = rollDice(20);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d12').addEventListener('click', function() {
+        var result = rollDice(12);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d10').addEventListener('click', function() {
+        var result = rollDice(10);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d8').addEventListener('click', function() {
+        var result = rollDice(8);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d6').addEventListener('click', function() {
+        var result = rollDice(6);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d4').addEventListener('click', function() {
+        var result = rollDice(4);
+        exibirResultadoDado(result);
+    });
+
+    document.getElementById('d3').addEventListener('click', function() {
+        var result = rollDice(3);
+        exibirResultadoDado(result);
+    });
+
+    // Event listener para ocultar o resultado do dado quando clicar fora da caixa
+    document.addEventListener('click', function(event) {
+        var resultadoDado = document.getElementById('resultado-dado');
+        if (!resultadoDado.contains(event.target)) {
+            ocultarResultadoDado();
+        }
+    });
+
+    // Função para rolar dados
+    function rollDice(max) {
+        return Math.floor(Math.random() * max) + 1;
+    }
+</script>
+
+</body>
+</html>
